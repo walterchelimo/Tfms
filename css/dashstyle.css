@@ -1,0 +1,18 @@
+.stylenav{
+    padding: 4px 4px;
+
+}
+
+.grey{
+    color: grey;
+}
+
+.border-left-primary{
+    border-left: 0.25rem solid blue;
+}
+.border-left-success{
+    border-left: 0.25rem solid green;
+}
+.border-left-warning{
+    border-left: 0.25rem solid orange;
+}
