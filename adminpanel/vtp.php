@@ -261,6 +261,22 @@ if($results){
 
 <div class="col-12">
               <div class="card top-selling overflow-auto">
+                  <?php
+
+          
+
+     $id = '$factoryid';
+     $query =mysqli_query($conn,"SELECT * FROM produce WHERE factoryid='$factoryid' ORDER BY id DESC LIMIT 31");
+     $count =1;
+     $tota = 0;
+     while($row = mysqli_fetch_array($query)){
+      
+        ?>
+
+        <?php
+        $tota = $tota + $row['dtpay'];
+    $count++;
+    } ?>
 
 
                 <div class="card-body pb-0">
@@ -277,7 +293,8 @@ if($results){
                 echo "<th scope='col'>Date</th>";
                 echo "<th scope='col'>Factory Payrate (Ksh)</th>";
                 echo "<th scope='col'>Weight(Kgs)</th>";
-                echo "<th scope='col'>Total(Ksh)</th>";
+                echo "<th scope='col'>Total(Ksh per day)</th>";
+                
                 
                 
                 echo "</tr>";
@@ -303,8 +320,31 @@ if($results){
             }
 
 ?>
+                   
 
                 </div>
+                  <div class="p-4">
+                  <span><b>Cumulative Kgs:</b></span>  <?php
+
+          
+
+     $id = '$factoryid';
+     $query =mysqli_query($conn,"SELECT * FROM produce WHERE factoryid='$factoryid' ORDER BY id DESC LIMIT 31");
+     $count =1;
+     $total = 0;
+     while($row = mysqli_fetch_array($query)){
+      
+        ?>
+
+        <?php
+        $total = $total + $row['weight'];
+    $count++;
+    } ?>
+    <tr>
+    <td><?php echo $total; ?></td> <span style="color:green;">Kilograms</span><br><br>
+                  <span><b>Cumulative Revenue:</b></span> <?php echo $tota;?> <span style="color:green;">Ksh</span><br><br>
+                  
+                  </div>
 
               </div>
             </div><!-- End Top Selling

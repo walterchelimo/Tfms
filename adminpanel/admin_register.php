@@ -342,7 +342,9 @@ if($results){
              </div>
              <div class="card-body" id="registeradminform">
                  <h4 style="width:80%;">
-                  <?php
+                 
+                     
+                     <?php
 
 include "../db.php";
 
@@ -356,69 +358,68 @@ if(isset($_POST['submit'])){
     $pnumber=$_POST['pnumber'];
     $usertype=$_POST['usertype'];
     $password=md5($_POST['password']);
-    $id='id';
-    $error='';
+   
     
     
     $profile=$_FILES['profile']['name'];
     $tempprofile=$_FILES['profile']['tmp_name'];
     $profilefolder="../uploads/".$profile;
     
-    $sql="INSERT INTO users(id,fname,sname,lname,email,pnumber,usertype,factoryid,profile,password) VALUES('$id','$fname','$sname','$lname','$email','$pnumber','$usertype','$factoryid','$profile','$password')";
-    
-    
-        
-    $results=mysqli_query($conn,$sql);
-    
-    if(!move_uploaded_file($tempprofile,$profilefolder)){
-        echo "<div class='alert alert-danger'>";
-            echo "something went wrong submitting the profile";
+    $user_query="SELECT * FROM users WHERE email='$email' OR factoryid='$factoryid'";
+    $results=mysqli_query($conn, $user_query);
+    $user=mysqli_fetch_array($results);
+    if($user){
+        if($user['email']==$email){
+            echo "<div class='alert alert-danger'>";
+            echo "Email already exist";
             echo "</div>";
+        }
+        elseif($user['factoryid']==$factoryid){
+           echo "<div class='alert alert-danger'>";
+            echo "factory id already exist";
+            echo "</div>";
+        }
+        
     }else{
-        
-        
-        
-        if($results){
-            
-            
-            echo "<div class='alert alert-success'>";
+            $sql3="INSERT INTO `users`(`fname`, `sname`, `lname`, `email`, `pnumber`, `usertype`, `profile`, `password`, `factoryid`) VALUES ('$fname','$sname','$lname','$email','$pnumber','$usertype','$profile','$password','$factoryid')";
+            $results=mysqli_query($conn,$sql3);
+            if(!move_uploaded_file($tempprofile,$profilefolder)){
+                echo "<div class='alert alert-danger'>";
+            echo "profile not uploaded";
+            echo "</div>";
+            }else{
+                if($results){
+                    echo "<div class='alert alert-success'>";
+            echo "Admin added Successfully";
+            echo "</div>";
+                    echo "<div class='alert alert-success'>";
             echo "profile uploaded successfully";
             echo "</div>";
-            
-        echo "<div class='alert alert-success'>";
-            echo "Registered Successfully";
-            echo "</div>";
-    }else{
-        if($sql2="SELECT email FROM users WHERE email='$email'"){
-            
-            
-            
-            echo "<div class='alert alert-danger'>";
-            echo "Email already registered";
-            echo "</div>";
-        }else{
-            if($sql1="SELECT factoryid FROM users WHERE factoryid='$factoryid'"){
-        echo "<div class='alert alert-danger'>";
-            echo "Factory Id Number Already Exist";
-            echo "</div>";
-    }else{
-              echo "<div class='alert alert-danger'>";
-            echo "something went wrong";
-            echo "</div>";  
+                }else{
+                    echo ".$sql3";
+                }
+                
             }
+            
+           
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+                
         }
-    }
-    
-    }
-    
-    
-    
-    
-    
+        
     
 }
-
 ?>
+  
+                     
                  </h4>
                  
                  <form action="admin_register.php" method="post" enctype="multipart/form-data">

@@ -360,71 +360,65 @@ if(isset($_POST['submit'])){
     $accountnumber=$_POST['accountnumber'];
     $accountname=$_POST['accountname'];
     $password=md5($_POST['password']);
-    $id='id';
-    $error='';
+   
     
     
     $profile=$_FILES['profile']['name'];
     $tempprofile=$_FILES['profile']['tmp_name'];
     $profilefolder="../uploads/".$profile;
     
-    
-    
-    $sql="INSERT INTO users(id,fname,sname,lname,email,pnumber,usertype,profile,factoryid,collectioncenter,bankname,bankbranch,accountnumber,accountname,password) VALUES('$id','$fname','$sname','$lname','$email','$pnumber','$usertype','$profile','$factoryid','$collectioncenter','$bankname','$bankbranch','$accountnumber','$accountname','$password')";
-    
-    
-        
-    $results=mysqli_query($conn,$sql);
-   
-    if(!move_uploaded_file($tempprofile,$profilefolder)){
-        echo "<div class='alert alert-danger'>";
-            echo "something went wrong submitting the profile";
+    $user_query="SELECT * FROM users WHERE email='$email' OR factoryid='$factoryid'";
+    $results=mysqli_query($conn, $user_query);
+    $user=mysqli_fetch_array($results);
+    if($user){
+        if($user['email']==$email){
+            echo "<div class='alert alert-danger'>";
+            echo "Email already exist";
             echo "</div>";
+        }
+        elseif($user['factoryid']==$factoryid){
+           echo "<div class='alert alert-danger'>";
+            echo "factory id already exist";
+            echo "</div>";
+        }
+        
     }else{
-        
-        
-        
-        if($results){
-            
-            
-            
-            echo "<div class='alert alert-success'>";
-            echo "profile uploaded successfully";
+            $sql3="INSERT INTO `users`(`fname`, `sname`, `lname`, `email`, `pnumber`, `usertype`, `profile`, `password`, `factoryid`, `bankname`, `bankbranch`, `accountnumber`, `accountname`, `collectioncenter`) VALUES ('$fname','$sname','$lname','$email','$pnumber','$usertype','$profile','$password','$factoryid','$bankname','$bankbranch','$accountnumber','$accountname','$collectioncenter')";
+            $results=mysqli_query($conn,$sql3);
+            if(!move_uploaded_file($tempprofile,$profilefolder)){
+                echo "<div class='alert alert-danger'>";
+            echo "profile not uploaded";
             echo "</div>";
-            
-        echo "<div class='alert alert-success'>";
+            }else{
+                if($results){
+                    echo "<div class='alert alert-success'>";
             echo "Registered Successfully";
             echo "</div>";
-    }else{
-            
-        if($sql2="SELECT email FROM users WHERE email='$email'"){
-            
-            
-            
-            echo "<div class='alert alert-danger'>";
-            echo "Email already registered";
+                    echo "<div class='alert alert-success'>";
+            echo "profile uploaded successfully";
             echo "</div>";
-        }else{
-            if($sql1="SELECT factoryid FROM users WHERE factoryid='$factoryid'"){
-        echo "<div class='alert alert-danger'>";
-            echo "Factory Id Number Already Exist";
-            echo "</div>";
-    }
-    else{
-        echo "some";
+                }else{
+                    echo ".$sql3";
+                }
+                
+            }
+            
+           
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+                
         }
-    }
-    
-    }
-    
-    
-    
-    
-    
+        
     
 }
-}
-
 ?>
                  </h4>
              </div>
